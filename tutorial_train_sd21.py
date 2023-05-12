@@ -3,6 +3,7 @@ from share import *
 import pytorch_lightning as pl
 from torch.utils.data import DataLoader
 from tutorial_dataset import MyDataset
+from artist_dataset import ArtistDataset
 from cldm.logger import ImageLogger
 from cldm.model import create_model, load_state_dict
 
@@ -30,10 +31,11 @@ model.only_mid_control = only_mid_control
 
 
 # Misc
-dataset = MyDataset()
+artist_name = "shadeon"
+dataset = ArtistDataset(artist_name)
 dataloader = DataLoader(dataset, num_workers=40, batch_size=batch_size, shuffle=True)
 logger = ImageLogger(batch_frequency=logger_freq)
-trainer = pl.Trainer(gpus=1, precision=32, callbacks=[logger], strategy="ddp")
+trainer = pl.Trainer(gpus=2, precision=32, callbacks=[logger], strategy="ddp")
 
 
 # Train!
