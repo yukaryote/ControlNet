@@ -6,6 +6,11 @@ from tutorial_dataset import MyDataset
 from cldm.logger import ImageLogger
 from cldm.model import create_model, load_state_dict
 
+#import torch.multiprocessing
+#torch.multiprocessing.set_sharing_strategy('file_system')
+#from torch import set_num_threads
+
+#set_num_threads(16)
 
 # Configs
 resume_path = './models/control_sd21_ini.ckpt'
@@ -26,9 +31,9 @@ model.only_mid_control = only_mid_control
 
 # Misc
 dataset = MyDataset()
-dataloader = DataLoader(dataset, num_workers=0, batch_size=batch_size, shuffle=True)
+dataloader = DataLoader(dataset, num_workers=40, batch_size=batch_size, shuffle=True)
 logger = ImageLogger(batch_frequency=logger_freq)
-trainer = pl.Trainer(gpus=1, precision=32, callbacks=[logger])
+trainer = pl.Trainer(gpus=1, precision=32, callbacks=[logger], strategy="ddp")
 
 
 # Train!
